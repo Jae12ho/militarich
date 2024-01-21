@@ -7,9 +7,9 @@ export default function Card() {
     const [res, setRes] = useState('0');
     const [details, setDetails] = useState([]);
     const [inputs, setInputs] = useState({
-        start_date: '2023-03-10',
-        end_date: '2024-11-12',
-        month_deposit: '400000',
+        start_date: '',
+        end_date: '',
+        month_deposit: '',
     });
     const { start_date, end_date, month_deposit } = inputs;
     
