@@ -5,7 +5,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: "군적금 계산기",
-  description: "군적금 만기 수령액을 계산해주는 사이트입니다.",
+  description: "군적금 만기 수령액을 계산해주는 사이트",
   icons: {
     icon: './favicon.ico',
   }
