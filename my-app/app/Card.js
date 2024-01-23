@@ -7,10 +7,11 @@ export default function Card() {
     const [res, setRes] = useState('0');
     const [details, setDetails] = useState([]);
     const [inputs, setInputs] = useState({
-        startDate: '2023-03-10',
-        endDate: '2024-11-12',
+        startDate: '',
+        endDate: '',
         monthDeposit: '',
     });
+
     const { startDate, endDate, monthDeposit } = inputs;
     
     const onChange = (e) => {
@@ -21,59 +22,51 @@ export default function Card() {
         });
     };
 
+    const editDeposit = (money) => {
+        setInputs({
+            ...inputs,
+            monthDeposit: monthDeposit ? monthDeposit + money : money,
+        });
+    };
+
     const calculate = () => {
         setDetails([]);
 
-        // 정기 적금 계산법 수정 필요.
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+        const month = Math.floor((endDateObj - startDateObj) / (1000*60*60*24*30)) + 1;
+        const totalInter = monthDeposit * 0.05 / 12 * (month * (month + 1))/2;
+        const principal = monthDeposit * month;
+        const PAI = totalInter + principal;
 
-        // const startDateObj = new Date(startDate);
-        // const endDateObj = new Date(endDate);
-        // const diff = endDateObj - startDateObj;
-        // const diffDay = Math.floor(diff / (1000*60*60*24));
-        // console.log(diffDay)
-        
-        // const [startYear, endYear] = [startDateObj.getFullYear(), endDateObj.getFullYear()];
+        const match = [0.33, 0.71, 1.0, 1.25, 0];
+        let matchRates = 1;
+        let tmp_details = [];
 
-        // for (let year = startYear; year <= endYear; year++) {
-        //     let tmp = 0;
-        //     for (let month = (year==startYear) ? startDateObj.getMonth()+1 : 1; month <= (year==endYear) ? endDateObj.getMonth()+1 : 12; month++) {
-                 
-        //     }
-        // }
+        for (let year = startDateObj.getFullYear(); year <= endDateObj.getFullYear(); year++) {
+            let PAIRate = 0;
 
-        // const [start_year, end_year] = [parseInt(start_date.slice(0, 4)), parseInt(end_date.slice(0, 4))];
-        // const match = [0.33, 0.71, 1.0, 1.25, 0];
-        // let principal = 0;
-        // let tmp = 0;
-        // let acc = 0;
-        // let tmp_details = [];
+            if (year === startDateObj.getFullYear()) {
+                PAIRate = (12 - startDateObj.getMonth()) / month;
+            } else if (year === endDateObj.getFullYear()) {
+                PAIRate = (endDateObj.getMonth() + 1) / month;
+            } else {
+                PAIRate = 12 / month;
+            }
+            matchRates += PAIRate * match[year >= 2022 ? (year <= 2025 ? year-2022 : 3) : 4];
 
-        // for (let year = start_year; year <= end_year; year++) {
-        //     tmp = 0;
-        //     if (year === start_year) {
-        //         principal = (13 - parseInt(start_date.slice(5, 7))) * month_deposit;
-        //     } else if (year === end_year) {
-        //         principal = parseInt(end_date.slice(5, 7)) * month_deposit;
-        //     } else {
-        //         principal = 12 * month_deposit;
-        //     }
-            
-        //     tmp_details = [...tmp_details, {
-        //         year: year,
-        //         principal: principal,
-        //         goverment_inter: principal * 0.01,
-        //         bank_inter: principal * 0.05,
-        //         match_saving: principal * match[year <= 2021 ? 4 : year <= 2025 ? year-2022 : 3],
-        //     }];
+            tmp_details = [...tmp_details, {
+                year: year,
+                principal: Math.round(principal * PAIRate),
+                goverment_inter: Math.round(totalInter * PAIRate / 6),
+                bank_inter: Math.round(totalInter * PAIRate * 5 / 6),
+                match_saving: Math.round(PAI * PAIRate * match[year >= 2022 ? (year <= 2025 ? year-2022 : 3) : 4]),
+            }];
+        }
 
-        //     tmp += principal;
-        //     tmp += tmp_details[tmp_details.length-1].goverment_inter;
-        //     tmp += tmp_details[tmp_details.length-1].bank_inter;
-        //     tmp += tmp_details[tmp_details.length-1].match_saving;
-        //     acc += tmp;
-        // }
-        // setDetails(tmp_details);
-        // setRes(acc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+        const receivedSaving = Math.round(PAI * matchRates);
+        setRes(receivedSaving.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+        setDetails(tmp_details);
     }
 
     return (
@@ -82,15 +75,21 @@ export default function Card() {
             <div className="text-gray-700">
                 <div className="my-3">
                     <p className="">첫 적금 납입 일자</p>
-                    <input className="w-full rounded-md bg-gray-100 border border-gray-100 py-2 px-2 outline-none focus:bg-gray-200 font-light text-black" name="start_date" type="date" value={startDate} onChange={onChange} />
+                    <input className="w-full rounded-md bg-gray-100 border border-gray-100 py-2 px-2 outline-none focus:bg-gray-200 font-light text-black" name="startDate" type="date" value={startDate} onChange={onChange} />
                 </div>
                 <div className="my-3">
                     <p>전역/소집해제 일자</p>
-                    <input className="w-full rounded-md bg-gray-100 border border-gray-100 py-2 px-2 outline-none focus:bg-gray-200 font-light text-black" name="end_date" type="date" value={endDate} onChange={onChange} />
+                    <input className="w-full rounded-md bg-gray-100 border border-gray-100 py-2 px-2 outline-none focus:bg-gray-200 font-light text-black" name="endDate" type="date" value={endDate} onChange={onChange} />
                 </div>
                 <div className="my-3">
                     <p>월 적금 납입액</p>
-                    <input className="w-full rounded-md bg-gray-100 border border-gray-100 py-2 px-2 outline-none focus:bg-gray-200 font-light text-black" name="month_deposit" placeholder="0" value={monthDeposit} onChange={onChange} />
+                    <input className="w-full rounded-md bg-gray-100 border border-gray-100 py-2 px-2 outline-none focus:bg-gray-200 font-light text-black" name="monthDeposit" type="number" placeholder="0" value={monthDeposit} onChange={onChange} />
+                    <div className="flex justify-between mt-2">
+                        <button className="text-sm font-light p-2 mr-1 rounded-md bg-gray-200" onClick={() => { editDeposit(50000); }}>+5만원</button>
+                        <button className="text-sm font-light p-2 mx-1 rounded-md bg-gray-200" onClick={() => { editDeposit(100000); }}>+10만원</button>
+                        <button className="text-sm font-light p-2 mx-1 rounded-md bg-gray-200" onClick={() => { editDeposit(-50000); }}>-5만원</button>
+                        <button className="text-sm font-light p-2 ml-1 rounded-md bg-gray-200" onClick={() => { editDeposit(-100000); }}>-10만원</button>
+                    </div>
                 </div>
                 <button className="w-full rounded-md bg-black text-white py-2 my-3 hover:opacity-80 active:opacity-100" onClick={calculate}>계산하기</button>
                 <div className="flex my-4">
