@@ -46,7 +46,9 @@ export default function Card() {
         for (let year = startDateObj.getFullYear(); year <= endDateObj.getFullYear(); year++) {
             let PAIRate = 0;
 
-            if (year === startDateObj.getFullYear()) {
+            if (startDateObj.getFullYear() == endDateObj.getFullYear()) {
+                PAIRate = 1;
+            } else if (year === startDateObj.getFullYear()) {
                 PAIRate = (12 - startDateObj.getMonth()) / month;
             } else if (year === endDateObj.getFullYear()) {
                 PAIRate = (endDateObj.getMonth() + 1) / month;
