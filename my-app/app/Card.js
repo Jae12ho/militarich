@@ -62,7 +62,7 @@ export default function Card() {
                 principal: Math.round(principal * PAIRate),
                 goverment_inter: Math.round(totalInter * PAIRate / 6),
                 bank_inter: Math.round(totalInter * PAIRate * 5 / 6),
-                match_saving: Math.round(PAI * PAIRate * match[year >= 2022 ? (year <= 2025 ? year-2022 : 3) : 4]),
+                match_saving: Math.round(year < 2024 ? PAI : principal * PAIRate * match[year >= 2022 ? (year <= 2025 ? year-2022 : 3) : 4]),
             }];
         }
 

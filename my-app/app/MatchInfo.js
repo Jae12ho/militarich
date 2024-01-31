@@ -8,8 +8,8 @@ export default function MatchInfo() {
                 <p className="my-1">은행 이자 : <bold className="font-bold">5%</bold></p>
                 <p className="my-1"><bold className="font-semibold">2022년</bold> 매칭 지원금 : 원금과 이자를 합한 원리금의 <bold className="font-semibold">33%</bold></p>
                 <p className="my-1"><bold className="font-semibold">2023년</bold> 매칭 지원금 : 원금과 이자를 합한 원리금의 <bold className="font-semibold">71%</bold></p>
-                <p className="my-1"><bold className="font-semibold">2024년</bold> 매칭 지원금 : 원금과 이자를 합한 원리금의 <bold className="font-semibold">100%</bold></p>
-                <p className="my-1"><bold className="font-semibold">2025년</bold> 매칭 지원금 : 원금과 이자를 합한 원리금의 <bold className="font-semibold">125%</bold></p>
+                <p className="my-1"><bold className="font-semibold">2024년</bold> 매칭 지원금 : 원금의 <bold className="font-semibold">100%</bold></p>
+                <p className="my-1"><bold className="font-semibold">2025년</bold> 매칭 지원금 : 원금의 <bold className="font-semibold">125%</bold></p>
             </div>
         </div>
     )
